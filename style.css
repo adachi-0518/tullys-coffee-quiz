@@ -1,0 +1,321 @@
+/* ===== タリーズ風カラーテーマ ===== */
+:root {
+  --green: #00533e;        /* タリーズの深緑 */
+  --green-dark: #003b2c;
+  --green-light: #e8f0ed;
+  --cream: #f6f1e7;        /* 背景のクリーム色 */
+  --brown: #4a2c17;        /* コーヒーブラウン */
+  --gold: #c8a165;         /* アクセントのゴールド */
+  --text: #2b2b2b;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+  /* コーヒー豆っぽいドット模様の背景 */
+  background-image: radial-gradient(rgba(0, 83, 62, 0.06) 2px, transparent 2px);
+  background-size: 28px 28px;
+}
+
+.app {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ===== 画面の切り替え ===== */
+.screen {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== スタート画面 ===== */
+.logo-mark {
+  font-size: 64px;
+  margin-bottom: 8px;
+}
+
+.brand {
+  color: var(--green);
+  font-weight: bold;
+  letter-spacing: 3px;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.title {
+  color: var(--green-dark);
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.lead {
+  line-height: 1.9;
+  color: #555;
+  margin-bottom: 32px;
+}
+
+.note {
+  font-size: 11px;
+  color: #999;
+  line-height: 1.7;
+  margin-top: 24px;
+}
+
+/* ===== ボタン ===== */
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--green);
+  color: var(--white);
+  padding: 16px 48px;
+  font-weight: bold;
+  box-shadow: 0 4px 14px rgba(0, 83, 62, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--green-dark);
+  transform: translateY(-2px);
+}
+
+.btn-choice {
+  background: var(--white);
+  border: 2px solid var(--green);
+  color: var(--green-dark);
+  padding: 22px 20px;
+  font-size: 17px;
+  font-weight: bold;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-choice:hover {
+  background: var(--green);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* ===== 質問画面 ===== */
+.progress {
+  margin-bottom: 36px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #ddd5c5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--green), var(--gold));
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--green);
+  font-weight: bold;
+  text-align: right;
+}
+
+.question {
+  color: var(--green-dark);
+  font-size: 22px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  min-height: 70px;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== 結果画面 ===== */
+.result-label {
+  color: var(--green);
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.result-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 32px 24px;
+  box-shadow: 0 8px 30px rgba(0, 59, 44, 0.15);
+  border-top: 6px solid var(--green);
+  margin-bottom: 20px;
+}
+
+.result-emoji {
+  font-size: 56px;
+  margin-bottom: 8px;
+}
+
+.result-name {
+  color: var(--green-dark);
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.result-origin {
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: bold;
+  margin: 10px 0 12px;
+}
+
+.category-badge {
+  display: inline-block;
+  background: var(--brown);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.result-desc {
+  line-height: 1.9;
+  color: #444;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+/* 味のチャート（苦味・酸味・コク） */
+.taste-chart {
+  margin-bottom: 20px;
+}
+
+.taste-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.taste-label {
+  width: 74px;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--green-dark);
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.taste-bar {
+  flex: 1;
+  height: 10px;
+  background: var(--green-light);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.taste-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--brown));
+  border-radius: 5px;
+  transition: width 0.8s ease 0.3s;
+}
+
+.taste-value {
+  width: 38px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--brown);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.taste-note {
+  font-size: 11px;
+  color: #999;
+  text-align: right;
+  margin-top: 4px;
+}
+
+.result-pairing {
+  background: var(--green-light);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--green-dark);
+  text-align: left;
+}
+
+.result-price {
+  font-size: 12px;
+  color: #888;
+  margin: 14px 0 12px;
+}
+
+.result-link {
+  display: inline-block;
+  color: var(--green);
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 2px;
+}
+
+.result-link:hover {
+  color: var(--green-dark);
+}
+
+.runner-up {
+  margin-bottom: 28px;
+}
+
+.runner-up-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.runner-up-name {
+  color: var(--brown);
+  font-weight: bold;
+}

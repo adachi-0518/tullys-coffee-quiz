@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コーヒー豆診断 | TULLY'S COFFEE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- スタート画面 -->
+    <section id="screen-start" class="screen active">
+      <div class="logo-mark">☕</div>
+      <p class="brand">TULLY'S COFFEE</p>
+      <h1 class="title">コーヒー豆診断</h1>
+      <p class="lead">
+        5つの質問に答えるだけで、<br>
+        タリーズの定番コーヒー豆 全17種から<br>
+        あなたにぴったりの一品をおすすめします。
+      </p>
+      <button class="btn btn-primary" onclick="startQuiz()">診断をはじめる</button>
+      <p class="note">
+        ※店舗スタッフが制作したオリジナルアプリです（タリーズコーヒー公式のアプリではありません）<br>
+        ※豆の情報は公式サイト調べ（2026年7月時点）。価格・取扱ラインナップは変更になる場合があります<br>
+        ※詳しくは店舗スタッフまでお気軽にどうぞ☕
+      </p>
+    </section>
+
+    <!-- 質問画面 -->
+    <section id="screen-quiz" class="screen">
+      <div class="progress">
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <p id="progress-text" class="progress-text">Q1 / 5</p>
+      </div>
+      <h2 id="question-text" class="question"></h2>
+      <div class="choices">
+        <button id="choice-a" class="btn btn-choice" onclick="answer(0)"></button>
+        <button id="choice-b" class="btn btn-choice" onclick="answer(1)"></button>
+      </div>
+    </section>
+
+    <!-- 結果画面 -->
+    <section id="screen-result" class="screen">
+      <p class="result-label">あなたにおすすめの豆は…</p>
+      <div class="result-card">
+        <div id="result-emoji" class="result-emoji"></div>
+        <h2 id="result-name" class="result-name"></h2>
+        <span id="result-category" class="category-badge"></span>
+        <p id="result-origin" class="result-origin"></p>
+        <p id="result-desc" class="result-desc"></p>
+
+        <div class="taste-chart">
+          <div class="taste-row">
+            <span class="taste-label">すっきり感</span>
+            <div class="taste-bar"><div id="bar-kire" class="taste-fill"></div></div>
+            <span id="value-kire" class="taste-value"></span>
+          </div>
+          <div class="taste-row">
+            <span class="taste-label">ボディ</span>
+            <div class="taste-bar"><div id="bar-body" class="taste-fill"></div></div>
+            <span id="value-body" class="taste-value"></span>
+          </div>
+          <p class="taste-note">※タリーズ公式サイトの10段階評価</p>
+        </div>
+
+        <p id="result-pairing" class="result-pairing"></p>
+        <p id="result-price" class="result-price"></p>
+        <a id="result-link" class="result-link" href="#" target="_blank" rel="noopener">公式サイトでこの豆を見る →</a>
+      </div>
+
+      <div class="runner-up">
+        <p class="runner-up-label">こちらもおすすめ</p>
+        <p id="runner-up-name" class="runner-up-name"></p>
+      </div>
+
+      <button class="btn btn-primary" onclick="restart()">もう一度診断する</button>
+      <p class="note">※価格・取扱いは変更になる場合があります。詳しくは店舗スタッフまでお気軽にどうぞ☕</p>
+    </section>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
