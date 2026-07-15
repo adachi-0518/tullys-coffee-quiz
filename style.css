@@ -197,6 +197,14 @@ body {
   margin-bottom: 4px;
 }
 
+.result-tagline {
+  color: var(--brown);
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.6;
+  margin: 8px 0 14px;
+}
+
 .result-origin {
   color: var(--gold);
   font-size: 13px;
