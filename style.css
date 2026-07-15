@@ -186,11 +186,6 @@ body {
   margin-bottom: 20px;
 }
 
-.result-emoji {
-  font-size: 56px;
-  margin-bottom: 8px;
-}
-
 .result-name {
   color: var(--green-dark);
   font-size: 26px;

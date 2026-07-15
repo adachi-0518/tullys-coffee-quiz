@@ -8,14 +8,13 @@
 // drink = 公式ページの「おすすめの飲み方」
 // flavor = 説明文から分類: fruity(華やか・フルーティー) /
 //          roasty(香ばしい・チョコ系) / balanced(バランス型)
-// tagline = 結果画面で絵文字の意味を補う一言（絵文字だけでは伝わらないため）
+// tagline = 結果画面で豆の特徴をひと言で伝えるキャッチコピー
 // =====================================================
 const BEANS = [
   // ---------- ブレンド ----------
   {
     name: "ブラック スリー",
     category: "ブレンド",
-    emoji: "🖤",
     tagline: "ブラックで飲みたい、カラメルの甘い余韻",
     origin: "コロンビア、ペルー",
     kire: 5, body: 7,
@@ -28,7 +27,6 @@ const BEANS = [
   {
     name: "ハウスブレンド",
     category: "ブレンド",
-    emoji: "🏠",
     tagline: "毎日飲める、タリーズの定番の味",
     origin: "コロンビア、グァテマラ 他",
     kire: 6, body: 5,
@@ -42,7 +40,6 @@ const BEANS = [
   {
     name: "モカジャバ",
     category: "ブレンド",
-    emoji: "🍷",
     tagline: "ワインのような、ちょっと個性派",
     origin: "インドネシア、エチオピア",
     kire: 5, body: 6,
@@ -55,7 +52,6 @@ const BEANS = [
   {
     name: "フレンチロースト",
     category: "ブレンド",
-    emoji: "🔥",
     tagline: "いちばん深煎り。スモーキーで力強い",
     origin: "グァテマラ、タンザニア",
     kire: 2, body: 9,
@@ -68,7 +64,6 @@ const BEANS = [
   {
     name: "ピッコロバンビーノ",
     category: "ブレンド",
-    emoji: "🌅",
     tagline: "朝にぴったり、軽やかキャラメル",
     origin: "グァテマラ、パプアニューギニア 他",
     kire: 6, body: 4,
@@ -81,7 +76,6 @@ const BEANS = [
   {
     name: "エスプレッソクラシコ",
     category: "ブレンド",
-    emoji: "⚡",
     tagline: "ラテにすると本領発揮の濃厚さ",
     origin: "グァテマラ、コスタリカ 他",
     kire: 2, body: 8,
@@ -94,7 +88,6 @@ const BEANS = [
   {
     name: "カフェオレ モナーレ",
     category: "ブレンド",
-    emoji: "🥛",
     tagline: "ミルクと相性抜群のカフェオレ向き",
     origin: "グァテマラ、コロンビア 他",
     kire: 6, body: 7,
@@ -109,7 +102,6 @@ const BEANS = [
   {
     name: "ホンジュラス 森のエランディケ",
     category: "シングルオリジン",
-    emoji: "🌲",
     tagline: "シトラス香る、森の澄んだ味わい",
     origin: "ホンジュラス レンピラ県 エランディケ",
     kire: 7, body: 6,
@@ -122,7 +114,6 @@ const BEANS = [
   {
     name: "タリーズ ブラジル バウ イエローブルボン",
     category: "シングルオリジン",
-    emoji: "🌻",
     tagline: "太陽で干した、すっきりマイルド",
     origin: "ブラジル",
     kire: 8, body: 4,
@@ -135,7 +126,6 @@ const BEANS = [
   {
     name: "タリーズ ブラジル バウ",
     category: "シングルオリジン",
-    emoji: "⚖️",
     tagline: "コクと酸味の、ちょうどいいバランス",
     origin: "ブラジル",
     kire: 5, body: 6,
@@ -148,7 +138,6 @@ const BEANS = [
   {
     name: "タリーズ ブラジル ファゼンダ バレ ド クリスタル",
     category: "シングルオリジン",
-    emoji: "🍒",
     tagline: "完熟チェリーのような、やさしい甘み",
     origin: "ブラジル",
     kire: 8, body: 6,
@@ -161,7 +150,6 @@ const BEANS = [
   {
     name: "エチオピア シダモG1 シャキッソウォッシュド",
     category: "シングルオリジン",
-    emoji: "💐",
     tagline: "花のような香りと、柑橘の爽やかさ",
     origin: "エチオピア",
     kire: 9, body: 6,
@@ -174,7 +162,6 @@ const BEANS = [
   {
     name: "スマトラ マンデリン G1 リントンニフタ",
     category: "シングルオリジン",
-    emoji: "🍫",
     tagline: "ダークチョコのような、重厚なコク",
     origin: "インドネシア 北スマトラ リントンニフタ地区",
     kire: 5, body: 7,
@@ -187,7 +174,6 @@ const BEANS = [
   {
     name: "キリマンジャロ KIBO タリメ スイートウォッシュド",
     category: "シングルオリジン",
-    emoji: "🏔️",
     tagline: "紅茶みたいな香りと、はちみつの甘み",
     origin: "タンザニア マラ州 タリメエリア",
     kire: 7, body: 6,
@@ -200,7 +186,6 @@ const BEANS = [
   {
     name: "コスタリカ ラ ミニータ ウェットミル スイートウォッシュド",
     category: "シングルオリジン",
-    emoji: "🌺",
     tagline: "フローラルで、するする飲めるクリーンさ",
     origin: "コスタリカ タラス ロス サントス",
     kire: 6, body: 4,
@@ -213,7 +198,6 @@ const BEANS = [
   {
     name: "デカフェ ブラジル IP農園",
     category: "シングルオリジン",
-    emoji: "🌙",
     tagline: "夜でも安心、カフェイン95%オフ",
     origin: "ブラジル ミナスジェライス州 カルモ デ ミナス IP農園",
     kire: 4, body: 4,
@@ -227,7 +211,6 @@ const BEANS = [
   {
     name: "エチオピアモカ G1 ウラガ ナチュラル",
     category: "シングルオリジン",
-    emoji: "🍑",
     tagline: "ラズベリーやピーチのような華やかさ",
     origin: "エチオピア オロミア州 シダモ グジ ウラガ地区",
     kire: 9, body: 6,
@@ -394,7 +377,6 @@ function showResult() {
   const winner = ranking[0].bean;
   const second = ranking[1].bean;
 
-  document.getElementById("result-emoji").textContent = winner.emoji;
   document.getElementById("result-name").textContent = winner.name;
   document.getElementById("result-tagline").textContent = winner.tagline;
   document.getElementById("result-category").textContent =
@@ -406,8 +388,7 @@ function showResult() {
   document.getElementById("result-price").textContent =
     winner.price + " ※2026年7月時点";
   document.getElementById("result-link").href = winner.url;
-  document.getElementById("runner-up-name").textContent =
-    `${second.emoji} ${second.name}`;
+  document.getElementById("runner-up-name").textContent = second.name;
 
   showScreen("screen-result");
 
