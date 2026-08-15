@@ -309,26 +309,61 @@ const QUESTIONS = [
 
 // =====================================================
 // アプリの状態
+//   picks[i] = 質問iで選んだ選択肢のindex（0 or 1）
+//   配点そのもの（各choiceのscore関数）は変更していない。回答を picks に
+//   記録しておき、結果画面で毎回まとめて合算する方式にすることで、
+//   「ひとつ前にもどる」で直前の回答分をそのまま差し引ける。
+//   → 採点結果・同点時の並び順は従来と完全に同一。
 // =====================================================
 let currentQuestion = 0; // いま何問目か
-let scores = [];         // BEANSと同じ並び順の合計点
+let picks = [];          // 回答した選択肢のindexを問題順に記録
+let fading = false;      // フェード遷移中フラグ（多重タップ防止）
+
+const $ = (id) => document.getElementById(id);
 
 // =====================================================
 // 画面の切り替え
 // =====================================================
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  $(id).classList.add("active");
 }
 
 // =====================================================
-// 診断スタート
+// スタート画面のダイヤル（17個の丸を円状に配置）を組み立てる
+// =====================================================
+function buildDial() {
+  const ring = $("dial-ring");
+  if (!ring) return;
+  let svg = "";
+  for (let i = 0; i < BEANS.length; i++) {
+    const a = (i / BEANS.length) * Math.PI * 2 - Math.PI / 2;
+    const cx = 86 + 78 * Math.cos(a) + 12;
+    const cy = 86 + 78 * Math.sin(a) + 12;
+    const r = i % 3 === 0 ? 8 : 6;
+    const fill =
+      i % 3 === 0 ? "var(--color-accent-500)"
+      : i % 3 === 1 ? "var(--color-accent-2-500)"
+      : "var(--color-accent-300)";
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}"></circle>`;
+  }
+  ring.innerHTML = svg;
+}
+
+// =====================================================
+// 診断スタート / もう一度診断する
 // =====================================================
 function startQuiz() {
   currentQuestion = 0;
-  scores = BEANS.map(() => 0); // 全部の豆のスコアを0にリセット
+  picks = [];
+  fading = false;
+  $("q-body").classList.remove("fading");
   showScreen("screen-quiz");
   renderQuestion();
+}
+
+function restart() {
+  startQuiz();
 }
 
 // =====================================================
@@ -336,40 +371,98 @@ function startQuiz() {
 // =====================================================
 function renderQuestion() {
   const q = QUESTIONS[currentQuestion];
-  document.getElementById("question-text").textContent = q.text;
-  document.getElementById("choice-a").textContent = q.choices[0].label;
-  document.getElementById("choice-b").textContent = q.choices[1].label;
+  $("question-text").textContent = q.text;
+  $("choice-a").textContent = q.choices[0].label;
+  $("choice-b").textContent = q.choices[1].label;
 
-  // 進捗バーの更新
-  const progress = (currentQuestion / QUESTIONS.length) * 100;
-  document.getElementById("progress-fill").style.width = progress + "%";
-  document.getElementById("progress-text").textContent =
-    `Q${currentQuestion + 1} / ${QUESTIONS.length}`;
+  // 番号（01 / 05）と右側のヒント
+  $("q-num").textContent = String(currentQuestion + 1).padStart(2, "0");
+  $("q-hint").textContent =
+    currentQuestion === 0
+      ? "直感でどうぞ"
+      : "あと" + (QUESTIONS.length - currentQuestion) + "問";
+
+  // カップ型の進捗（回答済みの数 ÷ 全問）
+  $("cup-fill").style.height = (currentQuestion / QUESTIONS.length) * 100 + "%";
+
+  // Q1では戻る先がないので隠す
+  $("back-btn").style.visibility = currentQuestion === 0 ? "hidden" : "visible";
+}
+
+// =====================================================
+// 設問の切り替え：今の設問をフェードアウト(200ms)してから
+// 中身を差し替える（同じ枠のテキストを入れ替えるだけなので、
+// 前の設問がDOMに二重で残らない）
+// =====================================================
+function swap(update) {
+  if (fading) return;
+  fading = true;
+  const body = $("q-body");
+  body.classList.add("fading");
+  setTimeout(() => {
+    update();
+    renderQuestion();
+    body.classList.remove("fading");
+    fading = false;
+  }, 200);
 }
 
 // =====================================================
 // 回答したとき
 // =====================================================
 function answer(choiceIndex) {
-  const choice = QUESTIONS[currentQuestion].choices[choiceIndex];
-
-  // 選んだ選択肢のscore関数で、全豆にポイントを加算
-  BEANS.forEach((bean, i) => {
-    scores[i] += choice.score(bean);
-  });
-
-  currentQuestion++;
-  if (currentQuestion < QUESTIONS.length) {
-    renderQuestion();
+  if (fading) return;
+  picks[currentQuestion] = choiceIndex; // この設問の回答を記録
+  const next = currentQuestion + 1;
+  if (next < QUESTIONS.length) {
+    swap(() => { currentQuestion = next; });
   } else {
     showResult();
   }
 }
 
 // =====================================================
+// ひとつ前にもどる（直前の回答を取り消してから戻す）
+// =====================================================
+function goBack() {
+  if (currentQuestion === 0 || fading) return;
+  swap(() => {
+    picks.pop();          // 直前の回答分を配点から除外
+    currentQuestion -= 1;
+  });
+}
+
+// =====================================================
+// 味の10段階を「ピップ」で表示し、左から順に点灯させる
+// =====================================================
+function renderPips(id, value, litClass) {
+  const box = $(id);
+  box.innerHTML = "";
+  const pips = [];
+  for (let i = 0; i < 10; i++) {
+    const pip = document.createElement("span");
+    pip.className = "pip";
+    pip.style.transitionDelay = 350 + i * 45 + "ms"; // 左から順に光らせる
+    box.appendChild(pip);
+    pips.push(pip);
+  }
+  // まず消灯状態を確定させる（reflow）→ その後クラスで点灯させると
+  // transition が「グレー→色」で流れる（transition-delay で左から順に）
+  void box.offsetWidth;
+  pips.forEach((pip, i) => {
+    if (i < value) pip.classList.add(litClass);
+  });
+}
+
+// =====================================================
 // 結果を表示する
 // =====================================================
 function showResult() {
+  // picks から全豆のスコアを合算（各choiceのscore関数は変更なし）
+  const scores = BEANS.map((bean) =>
+    picks.reduce((sum, pick, qi) => sum + QUESTIONS[qi].choices[pick].score(bean), 0)
+  );
+
   // スコアの高い順に並べ替え（同点はBEANSの並び順が優先）
   const ranking = BEANS
     .map((bean, i) => ({ bean, score: scores[i] }))
@@ -377,37 +470,33 @@ function showResult() {
   const winner = ranking[0].bean;
   const second = ranking[1].bean;
 
-  document.getElementById("result-name").textContent = winner.name;
-  document.getElementById("result-tagline").textContent = winner.tagline;
-  document.getElementById("result-category").textContent =
-    winner.decaf ? "デカフェ（カフェインレス）" : winner.category;
-  document.getElementById("result-origin").textContent = "原産地：" + winner.origin;
-  document.getElementById("result-desc").textContent = winner.desc;
-  document.getElementById("result-pairing").textContent =
-    "☕ 公式おすすめの飲み方：" + winner.drink.join("、");
-  document.getElementById("result-price").textContent =
-    winner.price + " ※2026年7月時点";
-  document.getElementById("result-link").href = winner.url;
-  document.getElementById("runner-up-name").textContent = second.name;
+  const FLAVOR = {
+    fruity: "華やか・フルーティー",
+    roasty: "香ばしいチョコ系",
+    balanced: "バランス型",
+  };
+
+  $("result-category").textContent = winner.decaf ? "デカフェ" : winner.category;
+  $("result-flavor").textContent = FLAVOR[winner.flavor];
+  $("result-name").textContent = winner.name;
+  $("result-tagline").textContent = winner.tagline;
+  $("result-origin").textContent = "原産地　" + winner.origin;
+  $("result-desc").textContent = winner.desc;
+  $("result-pairing").textContent = "公式おすすめの飲み方：" + winner.drink.join("、");
+  $("result-price").textContent = winner.price + "　※2026年7月時点";
+  $("result-link").href = winner.url;
+  $("value-kire").textContent = winner.kire + "/10";
+  $("value-body").textContent = winner.body + "/10";
+  $("runner-up-name").textContent = second.name;
 
   showScreen("screen-result");
 
-  // 公式の10段階評価をバーで表示（値 × 10%）
-  document.getElementById("value-kire").textContent = winner.kire + "/10";
-  document.getElementById("value-body").textContent = winner.body + "/10";
-  requestAnimationFrame(() => {
-    document.getElementById("bar-kire").style.width = winner.kire * 10 + "%";
-    document.getElementById("bar-body").style.width = winner.body * 10 + "%";
-  });
+  // 味の10段階評価をピップで表示
+  renderPips("pips-kire", winner.kire, "is-lit-kire");
+  renderPips("pips-body", winner.body, "is-lit-body");
 }
 
 // =====================================================
-// もう一度診断する
+// 初期化
 // =====================================================
-function restart() {
-  // 味のバーをリセット
-  ["bar-kire", "bar-body"].forEach((id) => {
-    document.getElementById(id).style.width = "0%";
-  });
-  startQuiz();
-}
+buildDial();
